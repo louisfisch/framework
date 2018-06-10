@@ -27,11 +27,23 @@ class FoundationFormRequestTest extends TestCase
 
     public function test_validated_method_returns_the_validated_data()
     {
-        $request = $this->createRequest(['name' => 'specified', 'with' => 'extras']);
+        $request = $this->createRequest([
+            'address' => [
+                'city' => 'specified',
+                'extra_attribute_1' => 'extra_value_1'
+            ],
+            'extra_attribute_2' => 'extra_value_2',
+            'name' => 'specified'
+        ]);
 
         $request->validateResolved();
 
-        $this->assertEquals(['name' => 'specified'], $request->validated());
+        $this->assertEquals([
+            'address' => [
+                'city' => 'specified',
+            ],
+            'name' => 'specified'
+        ], $request->validated());
     }
 
     /**
@@ -165,7 +177,10 @@ class FoundationTestFormRequestStub extends FormRequest
 {
     public function rules()
     {
-        return ['name' => 'required'];
+        return [
+            'address.city' => 'required',
+            'name' => 'required'
+        ];
     }
 
     public function authorize()
